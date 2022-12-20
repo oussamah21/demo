@@ -1,30 +1,24 @@
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
 pipeline {
-   agent any
-   stages {
-       stage('Build Code') {
-           steps {
-               sh """
-               echo "Building Artifact"
-               """
-           }
-       }
-      stage('Deploy Code') {
-          steps {
-               sh """
-               echo "Deploying Code"
-               """
-          }
-      }
-   }
+    agent any
+    tools {
+        maven 'Maven 3.3.9'
+        jdk 'jdk19'
+    }
+    stages {
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
+            }
+        }
+
+        stage ('Build') {
+            steps {
+                sh 'mvn -Dmaven.test.failure.ignore=true install'
+            }
+
+        }
+    }
 }
