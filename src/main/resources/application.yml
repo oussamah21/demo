@@ -1,0 +1,57 @@
+micronaut:
+  health:
+    circuitbreakers:
+    enabled: true
+  server:
+    thread-selection: auto
+  application:
+    name: demo
+netty:
+  default:
+    allocator:
+      max-order: 3
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:h2:mem:default;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`}
+    username: ${JDBC_USER:sa}
+    password: ${JDBC_PASSWORD:""}
+    driverClassName: ${JDBC_DRIVER:org.h2.Driver}
+jpa:
+  default:
+    entity-scan:
+      classpath: true
+      packages:
+        - 'com.example.domain'
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+
+
+alert:
+  client:
+    url: http://localhost:8082
+
+resilience4j:
+  circuitbreaker:
+    enabled: true
+    instances:
+      test:
+        baseConfig: default
+    configs:
+      default:
+        eventConsumerBufferSize: 5 #emitted CircuitBreaker events stored in a separate circular event consumer buffer
+        failureRateThreshold: 50 #we want the circuitbreaker to open if 50% of the last 10 calls (slidingWindowSize) failed
+        minimumNumberOfCalls: 3 #minimum number of calls before CircuitBreaker can calculate the error rate
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10s #time that the CircuitBreaker should wait before transitioning from open to half-open
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10 #e of the sliding window which is used to record the outcome of calls when the CircuitBreaker is closed.
+        slidingWindowType: COUNT_BASED
+        register-health-indicator: true
+        recordExceptions:
+          - io.micronaut.http.exceptions.HttpStatusException
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+          - io.micronaut.http.client.exceptions.HttpClientException
