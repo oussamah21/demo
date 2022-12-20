@@ -1,0 +1,30 @@
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+pipeline {
+   agent any
+   stages {
+       stage('Build Code') {
+           steps {
+               sh """
+               echo "Building Artifact"
+               """
+           }
+       }
+      stage('Deploy Code') {
+          steps {
+               sh """
+               echo "Deploying Code"
+               """
+          }
+      }
+   }
+}
