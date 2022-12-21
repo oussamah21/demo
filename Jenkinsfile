@@ -3,7 +3,8 @@ pipeline {
     tools {
         maven 'Maven 3.8.6'
         jdk 'jdk17'
-      
+      def dockerHome = tool 'docker'
+              env.PATH = "${dockerHome}/bin:${env.PATH}"
     }
     stages {
 
