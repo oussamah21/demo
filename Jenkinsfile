@@ -11,10 +11,9 @@ pipeline {
             steps {
                 sh 'mvn -Dmaven.test.failure.ignore=true install'
             }
-         stage('Build image') {
-               dockerImage = docker.build("oussamah21/demo:latest")
-            }
-
         }
+        stage('Build image') {
+                       dockerImage = docker.build("oussamah21/demo:latest")
+                    }
     }
 }
