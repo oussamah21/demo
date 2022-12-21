@@ -13,9 +13,9 @@ pipeline {
             }
         }
         stage('Build image') {
-                steps {
+
                        dockerImage = docker.build("oussamah21/demo:latest")
-                    }
+
                     }
     }
 }
